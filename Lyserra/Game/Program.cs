@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Lyserra.Game
+namespace Lyserra.Game.Program
 {
-    internal class GameException
+    internal class Program
     {
     }
 }
