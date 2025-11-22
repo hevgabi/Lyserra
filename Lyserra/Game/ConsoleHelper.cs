@@ -40,7 +40,10 @@ namespace Lyserra.Game
         };
 
             foreach (string lineText in story)
-                Console.WriteLine(lineText.PadLeft((40 + lineText.Length) / 2));
+            {
+                SlowWriteLine(lineText);
+                Thread.Sleep(350); 
+            }
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to the Main Menu...".PadLeft((40 + 39) / 2));
@@ -89,6 +92,24 @@ namespace Lyserra.Game
             Console.WriteLine(line);
             string input = getInput("Select Option: ");
             return input[0];
-        }   
+        }
+
+        private void SlowWriteLine(string text, int charDelayMs = 12)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                Console.WriteLine();
+                return;
+            }
+
+            string padded = text.PadLeft((40 + text.Length) / 2);
+
+            foreach (char c in padded)
+            {
+                Console.Write(c);
+                Thread.Sleep(charDelayMs);
+            }
+            Console.WriteLine();
+        }
     }
 }
