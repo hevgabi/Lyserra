@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace Lyserra.Game
 {
@@ -56,7 +57,9 @@ namespace Lyserra.Game
                 if (string.IsNullOrEmpty(input))
                 {
                     Console.WriteLine("Input cannot be empty. Please try again.");
-                    Console.Clear();
+                    input = "empty";
+                    Thread.Sleep(1500);
+                    return input;
                 }
             } while (string.IsNullOrEmpty(input));
             return input;

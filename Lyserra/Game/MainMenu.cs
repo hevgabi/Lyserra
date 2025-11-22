@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Lyserra.PlayerAndAttributes;
 
 namespace Lyserra.Game
@@ -18,22 +19,29 @@ namespace Lyserra.Game
                 Console.Clear();
                 Thread.Sleep(500);
             }
-bool gameMenuActive = true;
+
+            bool gameMenuActive = true;
             while (gameMenuActive)
             {
-                string title = "MAIN MENU";
-                Console.Write("==============================" +
-                    "\n" + title.PadLeft((30 + title.Length) / 2) +
-                    "\n==============================" +
-                    "\n [0] Create New Pet" +
-                    "\n [1] Load Pet" +
-                    "\n [2] View Pet Status" +
-                    "\n [3] Campaign" +
-                    "\n [4] Credits" +
-                    "\n [5] Exit" +
-                    "\n==============================\n");
-                string choice = consoleHelper.getInput("Select Option: ");
-                char option = choice[0];
+                string choice;
+                char option;
+                do
+                {
+                    Console.Clear();
+                    string title = "MAIN MENU";
+                    Console.Write("==============================" +
+                        "\n" + title.PadLeft((30 + title.Length) / 2) +
+                        "\n==============================" +
+                        "\n [0] Create New Pet" +
+                        "\n [1] Load Pet" +
+                        "\n [2] View Pet Status" +
+                        "\n [3] Campaign" +
+                        "\n [4] Credits" +
+                        "\n [5] Exit" +
+                        "\n==============================\n");
+                    choice = consoleHelper.getInput("Select Option: ");
+                    option = choice[0];
+                } while (choice.Equals("empty"));
 
                 switch (option)
                 {
