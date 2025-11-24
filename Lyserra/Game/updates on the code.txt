@@ -1,0 +1,34 @@
+﻿nag add ako regex tapos exceptions pre tapos may new file akong ginawa yung inputvalidator - cliff
+
+-After launch game: what if “enter” lang pinindot ni player -
+-Main menu: if [5] ang pinili, rekta exit na
+-Owner’s name, pet’s name: what if whitespace lang? also, set din kayo ng min and max characters. Also, pwede ba numbers? Pwede din ba special characters?
+-Special eye: pero add description. If true ang piliin ni player, ano ang advantage niya? If false ang piliin ni player, ano ang advantage niya?
+-Remove yung question na “special eye”
+-Personality, Mutation: add description
+-Wala pa pong [numeric] data type. Suggestion: include kayo ng stats na about pet care sa game niyo
+-Also, dapat po ay 20+ yung questions
+
+1.Owner’s name [string]
+2.Pet’s name [string]
+3.Breed [string]
+4.Pet age [string] “young”, “adult”
+5.Pet weight [string] “light”, “overweight”, “lean”
+6.Hair color [string]
+7.Haircut [string]
+8.Color design [string]
+9.Eye color [string]
+10. Special eye [Boolean] 
+11.Accessory [string]
+12. Personality [string]
+13.Scent [string]
+14.Mutation [string]	
+
+
+ay may nalimutan ako sa mga kulang pre lista ko nlng -weight and age -special trait -element -crystal -evolution -health status -special eye
+
+wla pa tayo exceptions and interface - done
+
+Add regex rin sa ConsoleHelper tas getName - done
+
+hindi ko maisip yung flow ng game pre, tapos yung sa health status ng pet dapat pala description nalang yon or lagay natin if healthy kineme

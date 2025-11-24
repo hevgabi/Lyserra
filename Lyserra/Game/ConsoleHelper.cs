@@ -83,7 +83,7 @@ namespace Lyserra.Game
                             skipStory = true;
                         }
                     }
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                 }
             });
             skipThread.Start();
@@ -109,7 +109,7 @@ namespace Lyserra.Game
                 }
             }
 
-            skipThread.Join(100); // wait for skip thread to finish
+            skipThread.Join(50); // wait for skip thread to finish
 
             Console.WriteLine();
             Console.WriteLine("Press Enter to return to the Main Menu...".PadLeft((40 + 39) / 2));
