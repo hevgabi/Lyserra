@@ -96,8 +96,10 @@ namespace Lyserra.Game
                 master = new Master(consoleHelper.getName("Enter Master's Name: "));
                 Console.Clear();
 
-                string masterType = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
-                master.MasterType = masterType;
+                master.MasterType = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
+
+                master.SpecialTrait = consoleHelper.pickType("Select Special Trait", attributes.specialTraits.ToArray());
+                
 
                 string[] petTypes = { "Dog", "Cat" };
                 string petType = consoleHelper.pickType("Select Pet Type", petTypes);
@@ -144,9 +146,12 @@ namespace Lyserra.Game
 
                 string petName = petType == "Dog" ? dog.Name : cat.Name;
 
+
                 // assign attributes to pet object
                 if (petType == "Dog")
                 {
+                    dog.Type = "Dog";
+                    dog.MasterID = master.MasterID;
                     dog.Weight = weight;
                     dog.Age = age;
                     dog.Breed = breed;
@@ -159,10 +164,11 @@ namespace Lyserra.Game
                     dog.Scent = scent;
                     dog.Mutation = mutation;
                     dog.Element = element;
-                    dog.MasterID = master.MasterID.ToString();
                 }
                 else
                 {
+                    cat.Type = "Cat";
+                    cat.MasterID = master.MasterID;
                     cat.Weight = weight;
                     cat.Age = age;
                     cat.Breed = breed;
@@ -175,7 +181,6 @@ namespace Lyserra.Game
                     cat.Scent = scent;
                     cat.Mutation = mutation;
                     cat.Element = element;
-                    cat.MasterID = master.MasterID.ToString();
                 }
 
                 // save to db

@@ -7,6 +7,7 @@ namespace Lyserra.PlayerAndAttributes
     {
         public Cat(string petName) : base(petName)
         {
+            Type = "Cat";
         }
 
         public Cat(string weight, string age) : base(weight, age)

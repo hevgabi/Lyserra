@@ -11,6 +11,11 @@ namespace Lyserra.PlayerAndAttributes
             "Gym bro", "Sigma lolo", "Delulu na couple", "Swerteng kumag"
         };
 
+        public List<string> specialTraits = new List<string> 
+        { 
+            "Brave", "Clever", "Kind", "Mischievous", "Wise" 
+        };
+
         public List<string> GetBreed(string petType)
         {
             return petType == "Dog" ? dogBreed : catBreed;

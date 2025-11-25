@@ -6,7 +6,7 @@ namespace Lyserra.PlayerAndAttributes
     public class Master
     {
         private string masterName;
-        private int masterID;
+        private long masterID;
         private string specialTrait;
         private string masterType;
         
@@ -17,7 +17,7 @@ namespace Lyserra.PlayerAndAttributes
         }
 
         public string MasterName { get { return masterName; } set { masterName = value; } }
-        public int MasterID { get { return masterID; } set { masterID = value; } } 
+        public long MasterID { get { return masterID; } set { masterID = value; } } 
         public string SpecialTrait { get { return specialTrait; } set { specialTrait = value; } }
         public string MasterType { get { return masterType; } set { masterType = value; } }
 
