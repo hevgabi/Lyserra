@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Lyserra.PlayerAndAttributes;
+using System;
 using System.Threading;
+using System.Xml.Linq;
 
 
 namespace Lyserra.Game
 {
     public class GameLoop
     {
+        MainMenu mainMenu = new MainMenu();
+        public Master master;
         public void startGame()
         {
             bool isGameRunning = true;
@@ -20,7 +24,8 @@ namespace Lyserra.Game
                 switch (choice)
                 {
                     case "1":
-                        MainMenu mainMenu = new MainMenu();
+                        Console.Clear();
+                        
                         mainMenu.displayMainMenu();
                         break;
                     case "2":

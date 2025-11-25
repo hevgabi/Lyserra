@@ -22,10 +22,6 @@ namespace Lyserra.PlayerAndAttributes
         private string crystal;
         private string evolution;
 
-
-
-
-
         public Pet(string petName)
         {
             this.name = petName;
@@ -38,7 +34,7 @@ namespace Lyserra.PlayerAndAttributes
             this.age = age;
         }
 
-        public string Name { get { return name; } set { Name = value; } }
+        public string Name { get { return name; } set { name = value; } }
         public string Weight { get { return weight; } set { weight = value; } }
         public string Age { get { return age; } set { age = value; } }
         public string Breed { get { return breed; } set { breed = value; } }

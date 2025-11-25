@@ -32,3 +32,5 @@ wla pa tayo exceptions and interface - done
 Add regex rin sa ConsoleHelper tas getName - done
 
 hindi ko maisip yung flow ng game pre, tapos yung sa health status ng pet dapat pala description nalang yon or lagay natin if healthy kineme
+
+-changed owner to master

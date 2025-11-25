@@ -5,11 +5,19 @@ using System.Text.RegularExpressions;
 
 namespace Lyserra.Game
 {
+    private struct variables
+    {
+        string input;
+        string 
+    }
     public class ConsoleHelper : IInputValidator
     {
         // regex pattern : letters with spaces, 2-20 chars lang to
         private readonly Regex namePattern = new Regex(@"^[a-zA-Z\s]{2,20}$");
         private bool skipStory = false;
+
+        //Master object
+        private Master master;
 
         // for validating names using regex
         public bool ValidateName(string name)
@@ -316,5 +324,27 @@ namespace Lyserra.Game
             char choice = getMenuChoice(title, option);
             return safePick(option, choice);
         }
-    }
+
+        //private Master loadExistingMaster()
+        //{
+        //    List<Master> savedMasters = 
+        //}
+
+        //public void masterSelection() 
+        //{
+        //    string[] masterOptions = { "Create New Master", "Load Existing Master" };
+        //    string choice = pickType("Select Opiton: ", masterOptions);
+
+        //    if ( choice == "Create New Master")
+        //    {
+        //        string masterName = getName("Enter Master Name: ");
+        //        master = new Master(masterName);
+        //        showMessage($"Master '{master.MasterName}' created successfully!", 2000);
+        //    } 
+        //    else if ( choice == "Load Existing Master")
+        //    {
+
+        //    }
+        //}
+    }   
 }

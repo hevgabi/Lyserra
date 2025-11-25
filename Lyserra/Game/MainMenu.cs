@@ -9,7 +9,7 @@ namespace Lyserra.Game
     {
         public ConsoleHelper consoleHelper = new ConsoleHelper();
         private Attributes attributes = new Attributes();
-        Owner owner;
+        Master master;
         private Dog dog;
         private Cat cat;
 
@@ -83,13 +83,17 @@ namespace Lyserra.Game
 
         private void StartPetCustomizationFlow()
         {
+            
+
+            
             try
             {
                 Console.Clear();
-                owner = new Owner(consoleHelper.getName("Enter Owner's Name: "));
+                LyserraDB.initialize();
+                master = new Master(consoleHelper.getName("Enter Masterr's Name: "));
                 Console.Clear();
 
-                string ownerType = consoleHelper.pickType("Select Owner Type", attributes.ownerTypes.ToArray());
+                string masterType = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
 
                 string[] petTypes = { "Dog", "Cat" };
                 string petType = consoleHelper.pickType("Select Pet Type", petTypes);
