@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Text;
 
-
 namespace Lyserra.PlayerAndAttributes
 {
     public class Attributes
     {
         public List<string> ownerTypes = new List<string>()
         {
-                "Tita with over decorated bags", "Rich kid", "College student na payat", "Gym bro", "Sigma lolo", "Delulu na couple", "Swerteng kumag"
+            "Tita with over decorated bags", "Rich kid", "College student na payat",
+            "Gym bro", "Sigma lolo", "Delulu na couple", "Swerteng kumag"
         };
+
         public List<string> GetBreed(string petType)
         {
             return petType == "Dog" ? dogBreed : catBreed;
@@ -32,8 +33,8 @@ namespace Lyserra.PlayerAndAttributes
 
         public List<string> hairCut = new List<string>()
         {
-            "Trim", "Summer Cut", "Poodle Cut", "Lion Cut", "Teddy Bear Cut", "Pixie Cut", "Bob Cut",
-             "Panther Cut", "V Cut", "Burst Fade", "Other"
+            "Trim", "Summer Cut", "Poodle Cut", "Lion Cut", "Teddy Bear Cut",
+            "Pixie Cut", "Bob Cut", "Panther Cut", "V Cut", "Burst Fade", "Other"
         };
 
         public List<string> colorEType = new List<string>()
@@ -45,8 +46,6 @@ namespace Lyserra.PlayerAndAttributes
         {
             "Red", "Blue", "Black", "Brown", "Violet", "Yellow", "Green"
         };
-
-
 
         public List<string> accessory = new List<string>()
         {
@@ -60,12 +59,31 @@ namespace Lyserra.PlayerAndAttributes
 
         public List<string> scent = new List<string>()
         {
-            "Baby Powder", "Rich Kid Perfume", "Chocolate Milk", "Mango Float", "Starbucks Caramel", "Sadboi Scent [maasim]"
+            "Baby Powder", "Rich Kid Perfume", "Chocolate Milk", "Mango Float",
+            "Starbucks Caramel", "Sadboi Scent [maasim]"
         };
 
         public List<string> mutation = new List<string>()
         {
             "God", "Angel", "Demon", "Neon", "Golden"
+        };
+
+        // weight categories
+        public List<string> weightCategories = new List<string>()
+        {
+            "Light", "Lean", "Overweight"
+        };
+
+        // age with descriptions
+        public List<string> ageCategories = new List<string>()
+        {
+            "Young (Below 1 year)", "Adult (1 year and above)"
+        };
+
+        // ilimints
+        public List<string> elements = new List<string>()
+        {
+            "Fire", "Water", "Earth", "Air"
         };
 
         public List<string> healthStatusMainMenu = new List<string>()
@@ -76,7 +94,16 @@ namespace Lyserra.PlayerAndAttributes
         public List<string> healthStatusMenu = new List<string>()
         {
             "Upper Body", "Middle Body", "Lower Body"
-        };  
+        };
+
+        // helper methods to extract value without description
+        public string GetAgeValue(string selectedAge)
+        {
+            if (selectedAge.Contains("Young"))
+                return "Young";
+            else if (selectedAge.Contains("Adult"))
+                return "Adult";
+            return selectedAge;
+        }
     }
 }
-

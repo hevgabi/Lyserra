@@ -5,31 +5,52 @@ using System.Text.RegularExpressions;
 
 namespace Lyserra.Game
 {
-    public struct SetVariables
+    // struct to hold display variables
+    public struct DisplayVariables
     {
-        private string input;
-        private string line;
-        private int num;
-        private char choice;
-        private string message;
+        public string Line;
+        public string Title;
+        public string Message;
+        public int PaddingValue;
 
+        // constructor to initialize struct
+        public DisplayVariables(string line, string title, string message, int paddingValue)
+        {
+            Line = line;
+            Title = title;
+            Message = message;
+            PaddingValue = paddingValue;
+        }
 
-        public string Input { get { return input; } set { input = value; } }
-        public string Line { get { return line; } set { line = value; } }
-        public int Num { get { return num; } set { num = value; } }
-        public char Choice { get { return choice; } set { choice = value; } }
-        public string Message { get { return message; } set { message = value; } }
-
+        // center text method
+        public string CenterText(string text, int width = 40)
+        {
+            return text.PadLeft((width + text.Length) / 2);
+        }
     }
+
     public class ConsoleHelper : IInputValidator
     {
-        SetVariables vars = new SetVariables();
+        // using struct for display variables
+        private DisplayVariables displayVars;
+
         // regex pattern : letters with spaces, 2-20 chars lang to
         private readonly Regex namePattern = new Regex(@"^[a-zA-Z\s]{2,20}$");
         private bool skipStory = false;
 
-        //Master object
+        // master reference
         private Master master;
+
+        // constructor to initialize display variables
+        public ConsoleHelper()
+        {
+            displayVars = new DisplayVariables(
+                new string('=', 40),
+                "",
+                "",
+                40
+            );
+        }
 
         // for validating names using regex
         public bool ValidateName(string name)
@@ -57,13 +78,14 @@ namespace Lyserra.Game
             Console.Clear();
             skipStory = false; // skip flag reset
 
-            string line = new string('=', 40);
-            string title = "Campaign: The Rise of the Orderbreakers";
-            Console.WriteLine(line);
-            Console.WriteLine(title.PadLeft((40 + title.Length) / 2));
-            Console.WriteLine(line);
+            // using struct for display variables
+            displayVars.Title = "Campaign: The Rise of the Orderbreakers";
+
+            Console.WriteLine(displayVars.Line);
+            Console.WriteLine(displayVars.CenterText(displayVars.Title));
+            Console.WriteLine(displayVars.Line);
             Console.WriteLine();
-            Console.WriteLine("Press SPACE to skip the story".PadLeft((40 + 28) / 2));
+            Console.WriteLine(displayVars.CenterText("Press SPACE to skip the story"));
             Console.WriteLine();
 
             string[] story = {
@@ -115,7 +137,7 @@ namespace Lyserra.Game
                     // display agad to after mag space ng user
                     if (!string.IsNullOrEmpty(lineText))
                     {
-                        Console.WriteLine(lineText.PadLeft((40 + lineText.Length) / 2));
+                        Console.WriteLine(displayVars.CenterText(lineText));
                     }
                     else
                     {
@@ -132,7 +154,7 @@ namespace Lyserra.Game
             skipThread.Join(50); // wait for skip thread to finish
 
             Console.WriteLine();
-            Console.WriteLine("Press Enter to return to the Main Menu...".PadLeft((40 + 39) / 2));
+            Console.WriteLine(displayVars.CenterText("Press Enter to return to the Main Menu..."));
             Console.ReadLine();
         }
 
@@ -140,13 +162,12 @@ namespace Lyserra.Game
         public string getInput(string prompt)
         {
             string input;
-            
+
             do
             {
                 try
                 {
-                    string line = new string('=', 40);
-                    Console.WriteLine(line);
+                    Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + prompt);
 
                     input = Console.ReadLine();
@@ -182,8 +203,7 @@ namespace Lyserra.Game
             {
                 try
                 {
-                    string line = new string('=', 40);
-                    Console.WriteLine(line);
+                    Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + prompt);
 
                     name = Console.ReadLine();
@@ -213,18 +233,18 @@ namespace Lyserra.Game
             } while (true);
         }
 
-        // method to pre to show a message with optional delay
+        // method to show a message with optional delay - using struct
         public void showMessage(string message, int delay = 2000)
         {
-            string line = new string('=', 40);
-            Console.WriteLine(line);
-            Console.WriteLine(message.PadLeft((40 + message.Length) / 2));
-            Console.WriteLine(line);
+            displayVars.Message = message;
+            Console.WriteLine(displayVars.Line);
+            Console.WriteLine(displayVars.CenterText(displayVars.Message));
+            Console.WriteLine(displayVars.Line);
             Thread.Sleep(delay);
             Console.Clear();
         }
 
-        // then method to display a menu and get user choice
+        // method to display a menu and get user choice - using struct
         public char getMenuChoice(string title, string[] options, short startIndex = 0)
         {
             string input;
@@ -233,16 +253,17 @@ namespace Lyserra.Game
                 try
                 {
                     Console.Clear();
-                    string line = new string('=', 40);
-                    Console.WriteLine(line);
-                    Console.WriteLine(title.PadLeft((40 + title.Length) / 2));
-                    Console.WriteLine(line);
+                    displayVars.Title = title;
+
+                    Console.WriteLine(displayVars.Line);
+                    Console.WriteLine(displayVars.CenterText(displayVars.Title));
+                    Console.WriteLine(displayVars.Line);
 
                     for (int i = 0; i < options.Length; i++)
                         Console.WriteLine($"[{i + startIndex}] {options[i]}");
 
-                    Console.WriteLine(line);
-                    Console.WriteLine(line);
+                    Console.WriteLine(displayVars.Line);
+                    Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + "Select Option: ");
 
                     input = Console.ReadLine();
@@ -279,7 +300,7 @@ namespace Lyserra.Game
                 return;
             }
 
-            string padded = text.PadLeft((40 + text.Length) / 2);
+            string padded = displayVars.CenterText(text);
 
             foreach (char c in padded)
             {

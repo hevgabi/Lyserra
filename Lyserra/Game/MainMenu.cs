@@ -33,7 +33,6 @@ namespace Lyserra.Game
                 switch (option)
                 {
                     case '0':
-
                         StartPetCustomizationFlow();
                         break;
 
@@ -50,7 +49,6 @@ namespace Lyserra.Game
                         break;
 
                     case '3':
-                        // Fixed: Call showCampaign method inayos ko na pre pag nag space yung user mag s-skip yung story then print it all
                         consoleHelper.showCampaign();
                         Console.Clear();
                         break;
@@ -72,6 +70,13 @@ namespace Lyserra.Game
 
                     case '5':
                         gameMenuActive = false;
+                        Console.Clear();
+                        string exitLine = new string('=', 40);
+                        Console.WriteLine(exitLine);
+                        Console.WriteLine("Thank you for playing Lyserra!".PadLeft((40 + 30) / 2));
+                        Console.WriteLine("Goodbye!".PadLeft((40 + 8) / 2));
+                        Console.WriteLine(exitLine);
+                        Thread.Sleep(2000);
                         break;
 
                     default:
@@ -84,17 +89,15 @@ namespace Lyserra.Game
 
         private void StartPetCustomizationFlow()
         {
-            
-
-            
             try
             {
                 Console.Clear();
                 LyserraDB.initialize();
-                master = new Master(consoleHelper.getName("Enter Masterr's Name: "));
+                master = new Master(consoleHelper.getName("Enter Master's Name: "));
                 Console.Clear();
 
                 string masterType = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
+                master.MasterType = masterType;
 
                 string[] petTypes = { "Dog", "Cat" };
                 string petType = consoleHelper.pickType("Select Pet Type", petTypes);
@@ -116,6 +119,14 @@ namespace Lyserra.Game
                 // Gather pet attributes
                 List<string> breedList = attributes.GetBreed(petType);
                 string breed = consoleHelper.pickType("Select Pet Breed", breedList.ToArray());
+
+                // new: Weight selection
+                string weight = consoleHelper.pickType("Select Pet Weight", attributes.weightCategories.ToArray());
+
+                // new: Age selection
+                string ageWithDesc = consoleHelper.pickType("Select Pet Age", attributes.ageCategories.ToArray());
+                string age = attributes.GetAgeValue(ageWithDesc); //get actual age value
+
                 string hairColor = consoleHelper.pickType("Select Hair Color", attributes.hairColor.ToArray());
                 string hairCut = consoleHelper.pickType("Select Pet Cut", attributes.hairCut.ToArray());
                 string colorType = consoleHelper.pickType("Select Pet Color Type", attributes.colorEType.ToArray());
@@ -124,13 +135,20 @@ namespace Lyserra.Game
                 string personality = consoleHelper.pickType("Select Personality", attributes.personality.ToArray());
                 string scent = consoleHelper.pickType("Select Scent", attributes.scent.ToArray());
                 string mutation = consoleHelper.pickType("Select Mutation", attributes.mutation.ToArray());
+
+                // new: Element selection
+                string element = consoleHelper.pickType("Select Element", attributes.elements.ToArray());
+
                 string healthMain = consoleHelper.pickType("Select Health Status", attributes.healthStatusMainMenu.ToArray());
                 string healthPart = consoleHelper.pickType("Select Specific Health Issue", attributes.healthStatusMainMenu.ToArray());
+
                 string petName = petType == "Dog" ? dog.Name : cat.Name;
 
-                // Assign attributes to the pet object
+                // assign attributes to pet object
                 if (petType == "Dog")
                 {
+                    dog.Weight = weight;
+                    dog.Age = age;
                     dog.Breed = breed;
                     dog.HairColor = hairColor;
                     dog.HairCut = hairCut;
@@ -140,9 +158,13 @@ namespace Lyserra.Game
                     dog.Personality = personality;
                     dog.Scent = scent;
                     dog.Mutation = mutation;
+                    dog.Element = element;
+                    dog.MasterID = master.MasterID.ToString();
                 }
                 else
                 {
+                    cat.Weight = weight;
+                    cat.Age = age;
                     cat.Breed = breed;
                     cat.HairColor = hairColor;
                     cat.HairCut = hairCut;
@@ -152,7 +174,17 @@ namespace Lyserra.Game
                     cat.Personality = personality;
                     cat.Scent = scent;
                     cat.Mutation = mutation;
+                    cat.Element = element;
+                    cat.MasterID = master.MasterID.ToString();
                 }
+
+                // save to db
+                LyserraDB.insertMaster(master);
+
+                if (petType == "Dog")
+                    LyserraDB.insertPet(dog);
+                else
+                    LyserraDB.insertPet(cat);
 
                 consoleHelper.showMessage($"{petName} has been created successfully!", 2000);
             }
