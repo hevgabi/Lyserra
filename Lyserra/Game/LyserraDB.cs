@@ -34,11 +34,13 @@ namespace Lyserra.Game
                 string sql = "INSERT INTO MASTER (masterName, specialTrait, masterType) VALUES (@masterName, @specialTrait, @type)";
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@masterID", master.MasterID);
+                    
                     cmd.Parameters.AddWithValue("@masterName", master.MasterName);
                     cmd.Parameters.AddWithValue("@specialTrait", master.SpecialTrait);
                     cmd.Parameters.AddWithValue("@type", master.MasterType);
                     cmd.ExecuteNonQuery();
+
+                    master.MasterID = Convert.ToInt32((long)new SQLiteCommand("SELECT last_insert_rowid()", conn).ExecuteScalar());
                 }
             }
         }
@@ -74,7 +76,7 @@ namespace Lyserra.Game
                             VALUES (@masterID, @petName, @weight, @age, @breed, @hairColor, @colorDesign, @hairCut, @eyeColor, @accessory, @personality, @scent, @mutation, @element, @crystal, @evolution)";
                 using (var cmd = new SQLiteCommand(sql, conn))
                 {
-
+                    cmd.Parameters.AddWithValue("@masterID", pet.MasterID);
                     cmd.Parameters.AddWithValue("@petName", pet.Name);
                 }
             }

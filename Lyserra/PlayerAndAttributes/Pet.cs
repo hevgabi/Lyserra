@@ -4,7 +4,7 @@ namespace Lyserra.PlayerAndAttributes
 {
     public abstract class Pet
     {
-
+        private string masterID;
         private string name;
         private string weight;
         private string age;
@@ -34,6 +34,7 @@ namespace Lyserra.PlayerAndAttributes
             this.age = age;
         }
 
+        public string MasterID { get { return masterID; } set { masterID = value; } }
         public string Name { get { return name; } set { name = value; } }
         public string Weight { get { return weight; } set { weight = value; } }
         public string Age { get { return age; } set { age = value; } }
