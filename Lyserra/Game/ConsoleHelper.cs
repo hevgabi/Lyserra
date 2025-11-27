@@ -158,6 +158,7 @@ namespace Lyserra.Game
             Console.ReadLine();
         }
 
+
         // method to get general input with validation for empty entries
         public string getInput(string prompt)
         {

@@ -23,6 +23,11 @@ namespace Lyserra.PlayerAndAttributes
         private string element;
         private string crystal;
         private string evolution;
+        //pet stats
+        private byte strength;
+        private byte mana;
+        private byte defense;
+        private byte speed;
 
         public Pet(string petName)
         {
@@ -30,11 +35,6 @@ namespace Lyserra.PlayerAndAttributes
             
         }
 
-        public Pet(string weight, string age)
-        {
-            this.weight = weight;
-            this.age = age;
-        }
 
         public long MasterID { get { return masterID; } set { masterID = value; } }
         public long PetID { get { return petID; } set { petID = value; } }
@@ -54,6 +54,12 @@ namespace Lyserra.PlayerAndAttributes
         public string Element { get { return element; } set { element = value; } }
         public string Crystal { get { return crystal; } set { crystal = value; } }
         public string Evolution { get { return evolution; } set { evolution = value; } }
+        public byte Strength { get { return strength; } set { strength = value; } }
+        public byte Mana { get { return mana; } set { mana = value; } }
+        public byte Defense { get { return defense; } set { defense = value; } }
+        public byte Speed { get { return speed; } set { speed = value; } }
+
+
 
 
         public abstract string showDisplay();

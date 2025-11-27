@@ -121,14 +121,11 @@ namespace Lyserra.Game
                 // Gather pet attributes
                 List<string> breedList = attributes.GetBreed(petType);
                 string breed = consoleHelper.pickType("Select Pet Breed", breedList.ToArray());
-
                 // new: Weight selection
                 string weight = consoleHelper.pickType("Select Pet Weight", attributes.weightCategories.ToArray());
-
                 // new: Age selection
                 string ageWithDesc = consoleHelper.pickType("Select Pet Age", attributes.ageCategories.ToArray());
                 string age = attributes.GetAgeValue(ageWithDesc); //get actual age value
-
                 string hairColor = consoleHelper.pickType("Select Hair Color", attributes.hairColor.ToArray());
                 string hairCut = consoleHelper.pickType("Select Pet Cut", attributes.hairCut.ToArray());
                 string colorType = consoleHelper.pickType("Select Pet Color Type", attributes.colorEType.ToArray());
@@ -137,12 +134,12 @@ namespace Lyserra.Game
                 string personality = consoleHelper.pickType("Select Personality", attributes.personality.ToArray());
                 string scent = consoleHelper.pickType("Select Scent", attributes.scent.ToArray());
                 string mutation = consoleHelper.pickType("Select Mutation", attributes.mutation.ToArray());
-
                 // new: Element selection
                 string element = consoleHelper.pickType("Select Element", attributes.elements.ToArray());
+                string healthMain = consoleHelper.pickType("Select Health Status", attributes.healthStatusMenu.ToArray());
+                
+                
 
-                string healthMain = consoleHelper.pickType("Select Health Status", attributes.healthStatusMainMenu.ToArray());
-                string healthPart = consoleHelper.pickType("Select Specific Health Issue", attributes.healthStatusMainMenu.ToArray());
 
                 string petName = petType == "Dog" ? dog.Name : cat.Name;
 

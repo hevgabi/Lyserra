@@ -8,10 +8,6 @@ namespace Lyserra.PlayerAndAttributes
         {
             Type = "Dog";
         }
-        public Dog(string petWeight, string petAge) : base(petWeight, petAge)
-        {
-        }
-
         public override string showDisplay()
         {
             string line = new string('=', 40);

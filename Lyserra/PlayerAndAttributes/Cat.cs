@@ -10,10 +10,6 @@ namespace Lyserra.PlayerAndAttributes
             Type = "Cat";
         }
 
-        public Cat(string weight, string age) : base(weight, age)
-        {
-        }
-
         public override string showDisplay()
         {
             string line = new string('=', 40);

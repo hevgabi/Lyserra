@@ -11,6 +11,11 @@ namespace Lyserra.PlayerAndAttributes
             "Gym bro", "Sigma lolo", "Delulu na couple", "Swerteng kumag"
         };
 
+        public List<string> stats = new List<string>()
+        {
+            "Strength", "Mana", "Defense", "Speed"
+        };
+
         public List<string> specialTraits = new List<string> 
         { 
             "Brave", "Clever", "Kind", "Mischievous", "Wise" 
@@ -91,14 +96,10 @@ namespace Lyserra.PlayerAndAttributes
             "Fire", "Water", "Earth", "Air"
         };
 
-        public List<string> healthStatusMainMenu = new List<string>()
-        {
-            "Health Status Overview", "Vaccination Reviews"
-        };
 
         public List<string> healthStatusMenu = new List<string>()
         {
-            "Upper Body", "Middle Body", "Lower Body"
+            "Healthy", "Sick", "Injured"
         };
 
         // helper methods to extract value without description
