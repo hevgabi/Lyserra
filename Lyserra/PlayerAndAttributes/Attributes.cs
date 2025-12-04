@@ -105,7 +105,13 @@ namespace Lyserra.PlayerAndAttributes
 
         public List<string> crystal = new List<string>()
         {
-            ""
+            "Crystal of Invisibility", "Crystal of Levitation", "Crystal of Undying", "Crystal of Kage-Bunshin"  
+        };
+
+        public List<string> evolution = new List<string>()
+        {
+            "Mega", "Prism", "Titan", "Phantom", "Royal",
+            "Ultra", "Alpha", "Arcane", "Turbo", "Master"
         };
 
         // helper methods to extract value without description

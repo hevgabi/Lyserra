@@ -9,27 +9,15 @@ namespace Lyserra.Game
     public class LyserraDB : IDisposable
     {
         private string folderPath = "Database";
-        private string dbFile = "Lyserra.db";
+        private readonly string dbFile = "LyserraDatabase.db";
         private string fullPath;
         private readonly string _dbPath;
         private SQLiteConnection _connection;
 
         public LyserraDB(string dbPath)
         {
-            
-            if (_dbPath == null)
-            {
-                _dbPath = dbPath;
-                initializeDatabase();
-                _connection = new SQLiteConnection($"Data Source={dbFile}");
-                _connection.Open();
-            } else
-            {
-                _dbPath = dbPath;
-                initializeDatabase();
-                _connection = new SQLiteConnection($"Data Source={_dbPath}");
-                _connection.Open();
-            }
+            _dbPath = dbPath;
+            initializeDatabase(); // dito na mag-open ng connection sa tamang path
         }
 
         //======================== MASTER METHODS ========================//
@@ -93,8 +81,6 @@ namespace Lyserra.Game
             cmd.Parameters.AddWithValue("@masterID", masterId);
 
             return cmd.ExecuteNonQuery() > 0;
-
-
         }
 
         public List<Master> searchMasters(string name)
@@ -140,14 +126,12 @@ namespace Lyserra.Game
             return list;
         }
 
-
-
         //======================== PET METHODS ========================//
 
         public long insertPet(Pet pet)
         {
             string sql = @"INSERT INTO Pet 
-            (masterID, Type, petName, weight, age, breed, hairColor, colorDesign, hairCut, eyeColor, accessory,
+            (masterID, type, petName, weight, age, breed, hairColor, colorDesign, hairCut, eyeColor, accessory,
              personality, scent, mutation, element, crystal, evolution, strength, mana, defense, speed)
             VALUES
             (@masterID, @type, @petName, @weight, @age, @breed, @hairColor, @colorDesign, @hairCut, @eyeColor,
@@ -182,7 +166,6 @@ namespace Lyserra.Game
             return pet.PetID;
         }
 
-
         public Pet getPetById(long petId)
         {
             string sql = "SELECT * FROM Pet WHERE petID=@petID";
@@ -197,7 +180,6 @@ namespace Lyserra.Game
 
             return null;
         }
-
 
         public List<Pet> getPetsByMasterId(long masterId)
         {
@@ -217,11 +199,10 @@ namespace Lyserra.Game
             return list;
         }
 
-
         public bool updatePet(Pet pet)
         {
             string sql = @"UPDATE Pet SET 
-                masterID=@masterID, Type=@type, petName=@petName, weight=@weight, age=@age, breed=@breed, 
+                masterID=@masterID, type=@type, petName=@petName, weight=@weight, age=@age, breed=@breed, 
                 hairColor=@hairColor, colorDesign=@colorDesign, hairCut=@hairCut, eyeColor=@eyeColor, 
                 accessory=@accessory, personality=@personality, scent=@scent, mutation=@mutation, element=@element,
                 crystal=@crystal, evolution=@evolution, strength=@strength, mana=@mana, defense=@defense, speed=@speed
@@ -255,7 +236,6 @@ namespace Lyserra.Game
             return cmd.ExecuteNonQuery() > 0;
         }
 
-
         public bool deletePet(long petId)
         {
             string sql = "DELETE FROM Pet WHERE petID=@petID;";
@@ -274,8 +254,6 @@ namespace Lyserra.Game
             cmd.ExecuteNonQuery();
         }
 
-
-
         //======================== OBJECT MAPPER ========================//
 
         private Pet mapPetFromReader(SQLiteDataReader reader)
@@ -284,7 +262,6 @@ namespace Lyserra.Game
             string name = reader["petName"]?.ToString() ?? "Unnamed";
 
             Pet pet;
-
             if (type.Equals("Dog", StringComparison.OrdinalIgnoreCase)) pet = new Dog(name);
             else if (type.Equals("Cat", StringComparison.OrdinalIgnoreCase)) pet = new Cat(name);
             else pet = new Dog(name);
@@ -335,17 +312,10 @@ namespace Lyserra.Game
             return list;
         }
 
-
-
-        public void Dispose()
-        {
-            _connection?.Close();
-            _connection?.Dispose();
-        }
+        //======================== DATABASE INITIALIZATION ========================//
 
         public void initializeDatabase()
         {
-
             fullPath = Path.Combine(folderPath, dbFile);
 
             if (!Directory.Exists(folderPath))
@@ -357,13 +327,12 @@ namespace Lyserra.Game
             if (!File.Exists(fullPath))
             {
                 SQLiteConnection.CreateFile(fullPath);
-                Console.WriteLine("Created Lyserra.db");
+                Console.WriteLine($"Created {dbFile}");
             }
 
             _connection = new SQLiteConnection($"Data Source={fullPath};Version=3;");
             _connection.Open();
 
- 
             createTables();
         }
 
@@ -381,11 +350,11 @@ namespace Lyserra.Game
             CREATE TABLE IF NOT EXISTS Pet (
                 petID INTEGER PRIMARY KEY AUTOINCREMENT,
                 masterID INTEGER NOT NULL,
-                Type TEXT,
+                type TEXT,
                 petName TEXT,
                 weight TEXT,
                 age TEXT,
-                breed INTEGER,
+                breed TEXT,
                 hairColor TEXT,
                 colorDesign TEXT,
                 hairCut TEXT,
@@ -409,6 +378,12 @@ namespace Lyserra.Game
 
             using var cmd2 = new SQLiteCommand(createPet, _connection);
             cmd2.ExecuteNonQuery();
+        }
+
+        public void Dispose()
+        {
+            _connection?.Close();
+            _connection?.Dispose();
         }
     }
 }

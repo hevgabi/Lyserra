@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading;
-using Lyserra.PlayerAndAttributes;
+﻿using Lyserra.PlayerAndAttributes;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Lyserra.Game
 {
@@ -245,6 +246,8 @@ namespace Lyserra.Game
             pet.Scent = consoleHelper.pickType("Select Scent", attributes.scent.ToArray());
             pet.Mutation = consoleHelper.pickType("Select Mutation", attributes.mutation.ToArray());
             pet.Element = consoleHelper.pickType("Select Element", attributes.elements.ToArray());
+            pet.Crystal = consoleHelper.pickType("Select Crystal", attributes.crystal.ToArray());
+            pet.Evolution = consoleHelper.pickType("Select Evolution", attributes.evolution.ToArray());
 
             // Stats
             string[] statsNames = attributes.stats.ToArray();
@@ -321,7 +324,13 @@ namespace Lyserra.Game
                           $"Scent: {chosenPet.Scent}\n" +
                           $"Mutation: {chosenPet.Mutation}\n" +
                           $"Element: {chosenPet.Element}\n" +
-                          $"Stats - STR: {chosenPet.Strength}, MANA: {chosenPet.Mana}, DEF: {chosenPet.Defense}, SPD: {chosenPet.Speed}";
+                          $"Crystal: {chosenPet.Crystal}" +
+                          $"Evolution: {chosenPet.Evolution}" +
+                          $"================= Stats  =================\n" +
+                          $"STR: {chosenPet.Strength}\n" +
+                          $"MANA: {chosenPet.Mana}\n" +
+                          $"DEF: {chosenPet.Defense}\n" +
+                          $"SPD: {chosenPet.Speed}";
 
             consoleHelper.showMessage(info); // hintay sa Enter
         }
