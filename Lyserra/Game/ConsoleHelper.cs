@@ -242,7 +242,7 @@ namespace Lyserra.Game
         }
 
         // method to display a menu and get user choice - using struct
-        public char getMenuChoice(string title, string[] options, short startIndex = 0)
+        public string getMenuChoice(string title, string[] options, short startIndex = 0)
         {
             string input;
             do
@@ -251,42 +251,27 @@ namespace Lyserra.Game
                 {
                     Console.Clear();
                     displayVars.Title = title;
-
                     Console.WriteLine(displayVars.Line);
                     Console.WriteLine(displayVars.CenterText(displayVars.Title));
                     Console.WriteLine(displayVars.Line);
-
                     for (int i = 0; i < options.Length; i++)
-                        Console.WriteLine($"[{i + startIndex}] {options[i]}");
-
+                        Console.WriteLine($"[{i + startIndex + 1}] {options[i]}"); // 1-based display
                     Console.WriteLine(displayVars.Line);
                     Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + "Select Option: ");
 
-                    input = Console.ReadLine();
-                    input = SanitizeInput(input);
+                    input = SanitizeInput(Console.ReadLine());
+                    if (!ValidateInput(input)) throw new EmptyInputException();
 
-                    if (!ValidateInput(input))
-                    {
-                        throw new EmptyInputException();
-                    }
+                    if (input.Length > 2) throw new InvalidMenuChoiceException("Invalid input length.");
 
-                    return input[0];
+                    return input; // return full string
                 }
-                catch (EmptyInputException ex)
-                {
-                    Console.Clear();
-                    showMessage(ex.Message);
-                    Thread.Sleep(700);
-                }
-                catch (Exception ex)
-                {
-                    Console.Clear();
-                    showMessage($"An error occurred: {ex.Message}");
-                    Thread.Sleep(700);
-                }
+                catch (EmptyInputException ex) { Console.Clear(); showMessage(ex.Message); Thread.Sleep(700); }
+                catch (Exception ex) { Console.Clear(); showMessage($"An error occurred: {ex.Message}"); Thread.Sleep(700); }
             } while (true);
         }
+
 
         // method to write text slowly with optional character delay
         public void slowWriteLine(string text, int charDelayMs = 12)
@@ -315,44 +300,30 @@ namespace Lyserra.Game
         }
 
         // method to safely pick an option from the menu
-        public string safePick(string[] arr, char choiceChar)
+        public string safePick(string[] arr, string choiceInput)
         {
-            if (arr == null || arr.Length == 0)
-                return string.Empty;
+            if (arr == null || arr.Length == 0) return string.Empty;
 
-            int index;
             while (true)
             {
                 try
                 {
-                    if (Char.IsDigit(choiceChar))
+                    if (short.TryParse(choiceInput, out short choice))
                     {
-                        index = choiceChar - '0';
-                        if (index >= 0 && index < arr.Length)
-                        {
-                            return arr[index];
-                        }
+                        choice -= 1; // 0-based index
+                        if (choice >= 0 && choice < arr.Length) return arr[choice];
                     }
-
-                    throw new InvalidMenuChoiceException($"Invalid choice. Please select a number between 0 and {arr.Length - 1}.");
+                    throw new InvalidMenuChoiceException($"Invalid choice. Select 1-{arr.Length}.");
                 }
-                catch (InvalidMenuChoiceException ex)
-                {
-                    showMessage(ex.Message);
-                    choiceChar = getMenuChoice("Select Option", arr);
-                }
-                catch (Exception ex)
-                {
-                    showMessage($"An error occurred: {ex.Message}");
-                    choiceChar = getMenuChoice("Select Option", arr);
-                }
+                catch (InvalidMenuChoiceException ex) { showMessage(ex.Message); choiceInput = getMenuChoice("Select Option", arr); }
+                catch (Exception ex) { showMessage($"An error occurred: {ex.Message}"); choiceInput = getMenuChoice("Select Option", arr); }
             }
         }
 
         // method to combine menu choice and safe pick
         public string pickType(string title, string[] option)
         {
-            char choice = getMenuChoice(title, option);
+            string choice = getMenuChoice(title, option);
             return safePick(option, choice);
         }
 

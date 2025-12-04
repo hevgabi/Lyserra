@@ -1,6 +1,5 @@
 ﻿using Lyserra.PlayerAndAttributes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -27,62 +26,55 @@ namespace Lyserra.Game
 
         public void displayMainMenu()
         {
-            animation.dogAnimation();
-
+            animation.logo();
+            Console.ReadLine();
             gameMenuActive = true;
 
-            // Start game animation
             for (byte i = 0; i < 3; i++)
             {
                 Console.Clear();
-                Console.WriteLine("Starting the game...".PadLeft((40 + "Starting the game...".Length) / 2));
+                animation.startingLogo();
                 Thread.Sleep(500);
                 Console.Clear();
                 Thread.Sleep(500);
             }
 
-               masterMenu();
+            masterMenu();
 
-            string[] mainMenuOptions = { "Create New Pet", "Delete Pet", "Load Pet", "Change Master","Campaign", "Credits", "Exit" };
-            
+            string[] mainMenuOptions = { "Create New Pet", "Delete Pet", "Load Pet", "Change Master", "Campaign", "Credits", "Exit" };
 
             while (gameMenuActive)
             {
+                Console.Clear();
+                Master m = database.getMasterById(master.MasterID);
+                string space = "         ";
 
-                char option = consoleHelper.getMenuChoice("MAIN MENU", mainMenuOptions);
+                string choice = consoleHelper.pickType($"{space}MAIN MENU\nMaster: {m.MasterName}", mainMenuOptions);
 
-                switch (option)
+                switch (choice)
                 {
-                    case '0': // Create Pet
+                    case "Create New Pet":
                         StartPetCustomizationFlow(master);
                         break;
-
-                    case '1': // Delete Pet
+                    case "Delete Pet":
                         deletePetFlow();
                         break;
-
-                    case '2': // Load Pet
-                        choosePetFlow(master.MasterID); // automatic handle kung isa lang o maraming pets
-                        if (dog != null)
-                            consoleHelper.showMessage($"Loaded {dog.Name} the Dog!");
-                        else if (cat != null)
-                            consoleHelper.showMessage($"Loaded {cat.Name} the Cat!");     
+                    case "Load Pet":
+                        choosePetFlow(master.MasterID);
                         break;
-                    case '3':
+                    case "Change Master":
                         masterMenu();
                         break;
-                    case '4': // Campaign
+                    case "Campaign":
                         consoleHelper.showCampaign();
                         break;
-
-                    case '5': // Credits
+                    case "Credits":
                         showCredits();
                         break;
-                    case '6': // Exit
+                    case "Exit":
                         gameMenuActive = false;
                         break;
                 }
-              
             }
         }
 
@@ -100,22 +92,18 @@ namespace Lyserra.Game
                         createMasterFlow();
                         masterMenuActive = false;
                         break;
-
                     case "Choose Master":
                         chooseMasterFlow();
                         masterMenuActive = false;
                         break;
-
                     case "Delete Master":
                         deleteMasterFlow();
                         masterMenuActive = false;
                         break;
-
                     case "Exit":
                         masterMenuActive = false;
                         break;
                 }
-
             }
         }
 
@@ -134,7 +122,6 @@ namespace Lyserra.Game
 
             long masterId = database.insertMaster(newMaster);
             newMaster.MasterID = masterId;
-
             master = newMaster;
 
             consoleHelper.showMessage($"Master {masterName} created!");
@@ -143,7 +130,6 @@ namespace Lyserra.Game
         private void chooseMasterFlow()
         {
             Console.Clear();
-
             List<Master> list = database.getAllMasters();
 
             if (list.Count == 0)
@@ -156,18 +142,12 @@ namespace Lyserra.Game
             for (int i = 0; i < list.Count; i++)
                 names[i] = $"{list[i].MasterID}: {list[i].MasterName}";
 
-            // Show choices
             string picked = consoleHelper.pickType("Choose Master", names);
-
             long masterID = long.Parse(picked.Split(':')[0]);
 
             Master chosenMaster = database.getMasterById(masterID);
-
-            // DIRETSO MAIN MENU
             this.master = chosenMaster;
         }
-
-
 
         private void deleteMasterFlow()
         {
@@ -188,8 +168,8 @@ namespace Lyserra.Game
             string picked = consoleHelper.pickType("Delete Master", names);
             long masterId = long.Parse(picked.Split(':')[0]);
 
-            database.deletePetsByMasterId(masterId); // delete all pets first
-            database.deleteMaster(masterId);          // then delete master
+            database.deletePetsByMasterId(masterId);
+            database.deleteMaster(masterId);
 
             consoleHelper.showMessage("Master and all their pets have been deleted.");
 
@@ -197,29 +177,22 @@ namespace Lyserra.Game
                 master = null;
         }
 
-
-
         private void StartPetCustomizationFlow(Master master)
         {
             try
             {
                 Console.Clear();
-
-                // Select pet type and name
                 string[] petTypes = { "Dog", "Cat" };
                 string petType = consoleHelper.pickType("Select Pet Type", petTypes);
                 string petName = consoleHelper.getName("Enter Pet's Name: ");
                 consoleHelper.showMessage($"Let's create your pet '{petName}'!");
                 Console.Clear();
 
-                // Create pet object
                 Pet pet = petType == "Dog" ? new Dog(petName) : new Cat(petName);
                 pet.MasterID = master.MasterID;
 
-                // Assign attributes
                 AssignPetAttributes(pet, petType);
 
-                // Save to DB
                 long petId = database.insertPet(pet);
                 pet.PetID = petId;
 
@@ -250,7 +223,6 @@ namespace Lyserra.Game
             pet.Crystal = consoleHelper.pickType("Select Crystal", attributes.crystal.ToArray());
             pet.Evolution = consoleHelper.pickType("Select Evolution", attributes.evolution.ToArray());
 
-            // Stats
             string[] statsNames = attributes.stats.ToArray();
             List<byte> stats = consoleHelper.setStat(statsNames);
             pet.Strength = stats[0];
@@ -284,21 +256,18 @@ namespace Lyserra.Game
         private void choosePetFlow(long masterId)
         {
             Console.Clear();
-
             List<Pet> pets = database.getPetsByMasterId(masterId);
 
             if (pets.Count == 0)
             {
-                consoleHelper.showMessage("This master has no pets yet."); // hintay sa Enter
+                consoleHelper.showMessage("This master has no pets yet.");
                 return;
             }
 
             Pet chosenPet;
 
             if (pets.Count == 1)
-            {
                 chosenPet = pets[0];
-            }
             else
             {
                 string[] names = new string[pets.Count];
@@ -310,10 +279,8 @@ namespace Lyserra.Game
                 chosenPet = database.getPetById(petId);
             }
 
-            // Assign globally to dog or cat
             assignPetToGlobal(chosenPet);
 
-            // Display all attributes
             string info = $"{chosenPet.Name} ({chosenPet.Type})\n" +
                           $"Breed: {chosenPet.Breed}\n" +
                           $"Age: {chosenPet.Age}\n" +
@@ -333,10 +300,8 @@ namespace Lyserra.Game
                           $"DEF: {chosenPet.Defense}\n" +
                           $"SPD: {chosenPet.Speed}";
 
-            consoleHelper.showMessage(info); // hintay sa Enter
+            consoleHelper.showMessage(info);
         }
-
-
 
         private void showCredits()
         {
