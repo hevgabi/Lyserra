@@ -11,6 +11,7 @@ namespace Lyserra.Game
         public ConsoleHelper consoleHelper = new ConsoleHelper();
         private Attributes attributes = new Attributes();
         LyserraDB database = new LyserraDB("LyserraDatabase.db");
+        Animation animation = new Animation();
         Master master;
         Dog dog;
         Cat cat;
@@ -26,7 +27,10 @@ namespace Lyserra.Game
 
         public void displayMainMenu()
         {
+            animation.dogAnimation();
+
             gameMenuActive = true;
+
             // Start game animation
             for (byte i = 0; i < 3; i++)
             {
