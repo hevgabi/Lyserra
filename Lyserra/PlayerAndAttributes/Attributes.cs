@@ -103,6 +103,11 @@ namespace Lyserra.PlayerAndAttributes
             "Healthy", "Sick", "Injured"
         };
 
+        public List<string> crystal = new List<string>()
+        {
+            ""
+        };
+
         // helper methods to extract value without description
         public string GetAgeValue(string selectedAge)
         {

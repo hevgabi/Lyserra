@@ -231,19 +231,14 @@ namespace Lyserra.Game
         }
 
         // method to show a message with optional delay - using struct
-        public void showMessage(string message, int delay = 2000)
+        public void showMessage(string message)
         {
             displayVars.Message = message;
             Console.WriteLine(displayVars.Line);
             Console.WriteLine(displayVars.CenterText(displayVars.Message));
             Console.WriteLine(displayVars.Line);
-            if (delay > 0)
-                Thread.Sleep(delay);
-            else
-            {
-                Console.WriteLine("\nPress Enter to continue...");
-                Console.ReadLine(); 
-            }
+            Console.WriteLine("\nPress Enter to continue...");
+            Console.ReadLine();
         }
 
         // method to display a menu and get user choice - using struct

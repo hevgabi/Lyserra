@@ -59,13 +59,13 @@ namespace Lyserra.Game
                     case '2': // Load Pet
                         choosePetFlow(master.MasterID); // automatic handle kung isa lang o maraming pets
                         if (dog != null)
-                            consoleHelper.showMessage($"Loaded {dog.Name} the Dog!", 1500);
+                            consoleHelper.showMessage($"Loaded {dog.Name} the Dog!");
                         else if (cat != null)
-                            consoleHelper.showMessage($"Loaded {cat.Name} the Cat!", 1500);     
+                            consoleHelper.showMessage($"Loaded {cat.Name} the Cat!");     
                         break;
 
                     case '3': // View Pet Status
-                        consoleHelper.showMessage("View Pet Status feature is not yet implemented.", 2000);
+                        consoleHelper.showMessage("View Pet Status feature is not yet implemented.");
                         break;
 
                     case '4': // Campaign
@@ -135,7 +135,7 @@ namespace Lyserra.Game
 
             master = newMaster;
 
-            consoleHelper.showMessage($"Master {masterName} created!", 1500);
+            consoleHelper.showMessage($"Master {masterName} created!");
         }
 
         private void chooseMasterFlow()
@@ -146,7 +146,7 @@ namespace Lyserra.Game
 
             if (list.Count == 0)
             {
-                consoleHelper.showMessage("No master found.", 1000);
+                consoleHelper.showMessage("No master found.");
                 return;
             }
 
@@ -175,7 +175,7 @@ namespace Lyserra.Game
 
             if (list.Count == 0)
             {
-                consoleHelper.showMessage("No master found.", 1000);
+                consoleHelper.showMessage("No master found.");
                 return;
             }
 
@@ -189,7 +189,7 @@ namespace Lyserra.Game
             database.deletePetsByMasterId(masterId); // delete all pets first
             database.deleteMaster(masterId);          // then delete master
 
-            consoleHelper.showMessage("Master and all their pets have been deleted.", 2000);
+            consoleHelper.showMessage("Master and all their pets have been deleted.");
 
             if (master != null && master.MasterID == masterId)
                 master = null;
@@ -221,11 +221,11 @@ namespace Lyserra.Game
                 long petId = database.insertPet(pet);
                 pet.PetID = petId;
 
-                consoleHelper.showMessage($"{pet.Name} has been created successfully!", 2000);
+                consoleHelper.showMessage($"{pet.Name} has been created successfully!");
             }
             catch (Exception ex)
             {
-                consoleHelper.showMessage($"Error during pet creation: {ex.Message}", 3000);
+                consoleHelper.showMessage($"Error during pet creation: {ex.Message}");
             }
         }
 
@@ -262,7 +262,7 @@ namespace Lyserra.Game
 
             if (pets.Count == 0)
             {
-                consoleHelper.showMessage("No pets to delete.", 1000);
+                consoleHelper.showMessage("No pets to delete.");
                 return;
             }
 
@@ -274,7 +274,7 @@ namespace Lyserra.Game
             long petId = long.Parse(picked.Split(':')[0]);
 
             database.deletePet(petId);
-            consoleHelper.showMessage("Pet has been deleted.", 1500);
+            consoleHelper.showMessage("Pet has been deleted.");
         }
 
         private void choosePetFlow(long masterId)
@@ -323,7 +323,7 @@ namespace Lyserra.Game
                           $"Element: {chosenPet.Element}\n" +
                           $"Stats - STR: {chosenPet.Strength}, MANA: {chosenPet.Mana}, DEF: {chosenPet.Defense}, SPD: {chosenPet.Speed}";
 
-            consoleHelper.showMessage(info, 20000); // hintay sa Enter
+            consoleHelper.showMessage(info); // hintay sa Enter
         }
 
 

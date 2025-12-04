@@ -17,10 +17,19 @@ namespace Lyserra.Game
         public LyserraDB(string dbPath)
         {
             
-            _dbPath = dbPath;
-            initializeDatabase();
-            _connection = new SQLiteConnection($"Data Source={_dbPath}");
-            _connection.Open();
+            if (_dbPath == null)
+            {
+                _dbPath = dbPath;
+                initializeDatabase();
+                _connection = new SQLiteConnection($"Data Source={dbFile}");
+                _connection.Open();
+            } else
+            {
+                _dbPath = dbPath;
+                initializeDatabase();
+                _connection = new SQLiteConnection($"Data Source={_dbPath}");
+                _connection.Open();
+            }
         }
 
         //======================== MASTER METHODS ========================//
