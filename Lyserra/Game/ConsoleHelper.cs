@@ -353,29 +353,39 @@ namespace Lyserra.Game
         }
 
         // method to combine menu choice and safe pick
-        public string pickType(string title, string[] option)
+        public string pickTypeForMenu(string title, string[] options, bool addExit = true)
         {
-            // gumawa ng bagong array na may dagdag na Exit option
-            string[] newOption = new string[option.Length + 1];
-            Array.Copy(option, newOption, option.Length);
-            newOption[option.Length] = "Exit"; // last option is Exit
+            string[] newOptions;
 
-            // kunin ang number input
-            string input = getMenuChoice(title, newOption);
+            if (addExit)
+            {
+                newOptions = new string[options.Length + 1];
+                Array.Copy(options, newOptions, options.Length);
+                newOptions[options.Length] = "Exit";
+            }
+            else
+            {
+                newOptions = options;
+            }
 
-            // convert number to option
-            string choice = safePick(newOption, input);
+            string input = getMenuChoice(title, newOptions);
+            string choice = safePick(newOptions, input);
 
-            // kung Exit pinili, return null
             if (choice == "Exit") return null;
-
             return choice;
+        }
+
+        public string pickType(string title, string[] options)
+        {
+            string input = getMenuChoice(title, options);
+            string choice = safePick(options, input);
+            return choice; // no automatic "Exit"
         }
 
 
         public List<byte> setStat(string[] attr)
         {
-            byte statValue = 100;
+            byte statValue = 10;
             List<byte> value = new List<byte>(new byte[attr.Length]);
 
             int index = 0;
@@ -425,18 +435,13 @@ namespace Lyserra.Game
             return value;
         }
 
-        public bool confirmation(string msg)
+        public bool confirmation(string message, bool addExit = false)
         {
-            string[] confirmedOption = { "Yes", "No" };
-            string confirmAns = pickType(msg, confirmedOption);
-            if (confirmAns == "Yes")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            string[] options = { "Yes", "No" };
+            if (addExit) options = options.Append("Exit").ToArray();
+
+            string choice = pickTypeForMenu(message, options, addExit: false); // wag ulit auto add
+            return choice == "Yes";
         }
         public void showInstructions()
         {

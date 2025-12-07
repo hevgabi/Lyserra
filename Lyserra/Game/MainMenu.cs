@@ -32,8 +32,8 @@ namespace Lyserra.Game
             //bool mainMenuActive = true;
             while (mainMenuActive)
             {
-                string[] options = { "Create Master", "Choose Master", "Delete Master", "Campaign", "Credits", "Exit" };
-                string choice = consoleHelper.pickType("Main Menu", options);
+                string[] options = { "Create Master", "Choose Master", "Delete Master", "Campaign", "Credits" };
+                string choice = consoleHelper.pickTypeForMenu("Main Menu", options, addExit: true);
 
                 switch (choice)
                 {
@@ -54,7 +54,7 @@ namespace Lyserra.Game
                     case "Credits":
                         showCredits();
                         break;
-                    case "Exit":
+                    case null:
                         mainMenuActive = false;
                         animation.exitingLogo();
                         break;
@@ -68,7 +68,7 @@ namespace Lyserra.Game
         private void petMenu()
         {
 
-            string[] mainMenuOptions = { "Create New Pet", "Delete Pet", "Load Pet", "Change Master", "Campaign", "Credits", "Exit" };
+            string[] mainMenuOptions = { "Create New Pet", "Delete Pet", "Load Pet", "Change Master", "Exit"};
 
             while (gameMenuActive)
             {
@@ -100,7 +100,8 @@ namespace Lyserra.Game
                         while (changeMasterIsActive)
                         {
                             string[] changeMasterOption= { "Create Master", "Choose Master", "Delete Master" };
-                            string changeMasterChoice = consoleHelper.pickType("Master Menu", changeMasterOption);
+                            string changeMasterChoice = consoleHelper.pickTypeForMenu("Master Menu", changeMasterOption, addExit: false);
+
 
                             switch (changeMasterChoice)
                             {
@@ -115,7 +116,7 @@ namespace Lyserra.Game
                                 case "Delete Master":
                                     deleteMasterFlow();
                                     break;
-                                case "Exit":
+                                case null:
                                     changeMasterIsActive = false;
                                     animation.exitingLogo();
                                     break;
@@ -179,7 +180,7 @@ namespace Lyserra.Game
             for (int i = 0; i < list.Count; i++)
                 names[i] = $"{list[i].MasterID}: {list[i].MasterName}";
 
-            string picked = consoleHelper.pickType("Choose Master", names);
+            string picked = consoleHelper.pickTypeForMenu("Choose Master", names);
             if (picked == null) return; 
             long masterID = long.Parse(picked.Split(':')[0]);
 
@@ -189,7 +190,7 @@ namespace Lyserra.Game
             {
                 
                 this.master = chosenMaster;
-                consoleHelper.showMessage($"Master {{chosenMaster.MasterName}} has entered the game!\nGet ready for adventure!");
+                consoleHelper.showMessage($"Master {chosenMaster.MasterName} has entered the game!\nGet ready for adventure!");
 
             }
             else
@@ -305,6 +306,20 @@ namespace Lyserra.Game
 
             string[] statsNames = attributes.stats.ToArray();
             List<byte> stats = consoleHelper.setStat(statsNames);
+            bool confirmStats = false;
+
+            Console.Clear();
+            Console.WriteLine("=== Review Your Pet's Stats ===");
+            for (int i = 0; i < statsNames.Length; i++)
+            {
+                Console.WriteLine($"{statsNames[i]}: {stats[i]}");
+            }
+
+            if (!consoleHelper.confirmation("Are you satisfied with these stats?"))
+            {
+                stats = consoleHelper.setStat(statsNames); // redo allocation if not satisfied
+            }
+
             pet.Strength = stats[0];
             pet.Mana = stats[1];
             pet.Defense = stats[2];

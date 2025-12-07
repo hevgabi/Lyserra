@@ -15,11 +15,11 @@ namespace Lyserra.PlayerAndAttributes
         {
             "Strength", "Mana", "Defense", "Speed"
         };
-        
 
-        public List<string> specialTraits = new List<string> 
-        { 
-            "Brave", "Clever", "Kind", "Mischievous", "Wise" 
+
+        public List<string> specialTraits = new List<string>
+        {
+            "Brave", "Clever", "Kind", "Mischievous", "Wise"
         };
 
         public List<string> GetBreed(string petType)
@@ -81,7 +81,7 @@ namespace Lyserra.PlayerAndAttributes
 
         public List<string> mutation = new List<string>()
         {
-            "God", "Angel", "Demon", "Neon", "Golden"
+             "God [all stats glow]", "Angel [radiant aura]", "Demon [shadow aura]", "Neon [neon glow]", "Golden [golden shine]"
         };
 
         // weight categories
@@ -99,7 +99,10 @@ namespace Lyserra.PlayerAndAttributes
         // ilimints
         public List<string> elements = new List<string>()
         {
-            "Fire", "Water", "Earth", "Air"
+            "Fire [burning aura]",
+            "Water [soothing waves]",
+            "Earth [rocky shield]",
+            "Air [whirling breeze]"
         };
 
 
@@ -110,13 +113,24 @@ namespace Lyserra.PlayerAndAttributes
 
         public List<string> crystal = new List<string>()
         {
-            "Crystal of Invisibility", "Crystal of Levitation", "Crystal of Undying", "Crystal of Kage-Bunshin"  
+            "Crystal of Invisibility [becomes unseen]",
+            "Crystal of Levitation [floats above ground]",
+            "Crystal of Undying [resists fatal damage]",
+            "Crystal of Kage-Bunshin [creates shadow clones]"
         };
 
         public List<string> evolution = new List<string>()
         {
-            "Mega", "Prism", "Titan", "Phantom", "Royal",
-            "Ultra", "Alpha", "Arcane", "Turbo", "Master"
+            "Mega [increases size and power]",
+            "Prism [gains colorful aura]",
+            "Titan [massive strength boost]",
+            "Phantom [can phase through objects]",
+            "Royal [enhanced leadership presence]",
+            "Ultra [maximizes potential]",
+            "Alpha [dominates other pets]",
+            "Arcane [gains magical abilities]",
+            "Turbo [extreme speed boost]",
+            "Master [perfect balance of all traits]"
         };
 
         // helper methods to extract value without description
