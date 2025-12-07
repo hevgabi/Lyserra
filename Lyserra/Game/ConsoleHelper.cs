@@ -82,6 +82,7 @@ namespace Lyserra.Game
             // using struct for display variables
             displayVars.Title = "Campaign: The Rise of the Orderbreakers";
 
+
             Console.WriteLine(displayVars.Line);
             Console.WriteLine(displayVars.CenterText(displayVars.Title));
             Console.WriteLine(displayVars.Line);
@@ -167,6 +168,8 @@ namespace Lyserra.Game
 
             try
             {
+        
+
                 Console.WriteLine(displayVars.Line);
                 Console.Write("=== " + prompt);
 
@@ -200,11 +203,17 @@ namespace Lyserra.Game
             {
                 try
                 {
+
+           
                     Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + prompt);
 
+                    
+
                     name = Console.ReadLine();
                     name = SanitizeInput(name);
+
+                    if (name == "0") return null;
 
                     if (!ValidateName(name))
                     {
@@ -228,6 +237,26 @@ namespace Lyserra.Game
                     Console.Clear();
                 }
             } while (true);
+        }
+
+        public bool waitForEsc(string prompt)
+        {
+            Console.WriteLine(displayVars.Line);
+            Console.WriteLine(prompt);
+            Console.WriteLine("Press ESC to go back...");
+
+            while (true)
+            {
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Escape)
+                    {
+                        return true; // signal to go back
+                    }
+                }
+                Thread.Sleep(50); // prevent CPU overload
+            }
         }
 
         // method to show a message with optional delay - using struct
@@ -261,9 +290,11 @@ namespace Lyserra.Game
                     Console.WriteLine(displayVars.Line);
                     Console.Write("=== " + "Select Option: ");
 
-                    input = SanitizeInput(Console.ReadLine());
-                    if (!ValidateInput(input)) throw new EmptyInputException();
+                    
 
+                    input = SanitizeInput(Console.ReadLine());
+
+                    if (!ValidateInput(input)) throw new EmptyInputException();
                     if (input.Length > 2) throw new InvalidMenuChoiceException("Invalid input length.");
 
                     return input; // return full string
@@ -324,9 +355,23 @@ namespace Lyserra.Game
         // method to combine menu choice and safe pick
         public string pickType(string title, string[] option)
         {
-            string choice = getMenuChoice(title, option);
-            return safePick(option, choice);
+            // gumawa ng bagong array na may dagdag na Exit option
+            string[] newOption = new string[option.Length + 1];
+            Array.Copy(option, newOption, option.Length);
+            newOption[option.Length] = "Exit"; // last option is Exit
+
+            // kunin ang number input
+            string input = getMenuChoice(title, newOption);
+
+            // convert number to option
+            string choice = safePick(newOption, input);
+
+            // kung Exit pinili, return null
+            if (choice == "Exit") return null;
+
+            return choice;
         }
+
 
         public List<byte> setStat(string[] attr)
         {
@@ -378,6 +423,43 @@ namespace Lyserra.Game
             showMessage("All stat points allocated.");
 
             return value;
+        }
+
+        public bool confirmation(string msg)
+        {
+            string[] confirmedOption = { "Yes", "No" };
+            string confirmAns = pickType(msg, confirmedOption);
+            if (confirmAns == "Yes")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void showInstructions()
+        {
+            string[] instructions = {
+        "Welcome to Lyserra!",
+        "In this game, you play as a Master\nand train your pets.",
+        "First, create your Master by choosing\ntheir type and special traits.",
+        "As a Master, you can train yourself to\nimprove stats and abilities.",
+        "After training your Master, you can\ncreate and customize your Pet.",
+        "Allocate stat points for your Master and\nPet carefully.",
+        "During battles, you control your Master \nand command your Pet.",
+        "Press '0' at entering name to go back\nto the previous menu.",
+        "Follow the story and complete missions\nto progress.",
+        "Have fun and become the Guardian of the \nNatural Order!"
+    };
+
+            Console.Clear();
+            foreach (string msg in instructions)
+            {
+                showMessage(msg);
+            }
+
+            Console.Clear();
         }
 
 

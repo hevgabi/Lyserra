@@ -16,7 +16,7 @@ namespace Lyserra.Game
         Dog dog;
         Cat cat;
         bool gameMenuActive = true;
-
+        bool mainMenuActive = true;
         private void assignPetToGlobal(Pet pet)
         {
             if (pet.Type == "Dog")
@@ -27,26 +27,46 @@ namespace Lyserra.Game
 
         public void displayMainMenu()
         {
-            animation.logo();
-            Console.Write("Press Enter to continue...");
-            Console.ReadLine();
-            gameMenuActive = true;
+            
 
-            for (byte i = 0; i < 3; i++)
+            //bool mainMenuActive = true;
+            while (mainMenuActive)
             {
-                Console.Clear();
-                animation.startingLogo();
-                Thread.Sleep(500);
-                Console.Clear();
-                Thread.Sleep(500);
+                string[] options = { "Create Master", "Choose Master", "Delete Master", "Campaign", "Credits", "Exit" };
+                string choice = consoleHelper.pickType("Main Menu", options);
+
+                switch (choice)
+                {
+                    case "Create Master":
+                        createMasterFlow();
+                        if (master != null) petMenu();
+                        break;
+                    case "Choose Master":
+                        chooseMasterFlow();
+                        if (master != null) petMenu();
+                        break;
+                    case "Delete Master":
+                        deleteMasterFlow();
+                        break;
+                    case "Campaign":
+                        consoleHelper.showCampaign();
+                        break;
+                    case "Credits":
+                        showCredits();
+                        break;
+                    case "Exit":
+                        mainMenuActive = false;
+                        animation.exitingLogo();
+                        break;
+
+                }
             }
 
-            masterMenu();
 
-            if (master == null)
-            {
-                return; // lalabas ng displayMainMenu, walang error
-            }
+        }
+
+        private void petMenu()
+        {
 
             string[] mainMenuOptions = { "Create New Pet", "Delete Pet", "Load Pet", "Change Master", "Campaign", "Credits", "Exit" };
 
@@ -54,9 +74,10 @@ namespace Lyserra.Game
             {
                 Console.Clear();
                 Master m = database.getMasterById(master.MasterID);
-                string space = "         ";
 
-                string choice = consoleHelper.pickType($"{space}MAIN MENU\nMaster: {m.MasterName}", mainMenuOptions);
+
+                string space = "         ";
+                string choice = consoleHelper.pickType($"{space}Pet Menu\nMaster: {m.MasterName}", mainMenuOptions);
 
                 switch (choice)
                 {
@@ -64,6 +85,7 @@ namespace Lyserra.Game
                         animation.loadLogo();
                         StartPetCustomizationFlow(master);
                         animation.loadLogo();
+
                         break;
                     case "Delete Pet":
                         deletePetFlow();
@@ -71,16 +93,35 @@ namespace Lyserra.Game
                     case "Load Pet":
                         animation.loadLogo();
                         choosePetFlow(master.MasterID);
-                        
+
                         break;
                     case "Change Master":
-                        masterMenu();
-                        break;
-                    case "Campaign":
-                        consoleHelper.showCampaign();
-                        break;
-                    case "Credits":
-                        showCredits();
+                        bool changeMasterIsActive = true;
+                        while (changeMasterIsActive)
+                        {
+                            string[] changeMasterOption= { "Create Master", "Choose Master", "Delete Master" };
+                            string changeMasterChoice = consoleHelper.pickType("Master Menu", changeMasterOption);
+
+                            switch (changeMasterChoice)
+                            {
+                                case "Create Master":
+                                    createMasterFlow();
+                                    if (master != null) petMenu();
+                                    break;
+                                case "Choose Master":
+                                    chooseMasterFlow();
+                                    if (master != null) petMenu();
+                                    break;
+                                case "Delete Master":
+                                    deleteMasterFlow();
+                                    break;
+                                case "Exit":
+                                    changeMasterIsActive = false;
+                                    animation.exitingLogo();
+                                    break;
+
+                            }
+                        }
                         break;
                     case "Exit":
                         gameMenuActive = false;
@@ -90,56 +131,38 @@ namespace Lyserra.Game
             }
         }
 
-        private void masterMenu()
-        {
-            bool masterMenuActive = true;
-            while (masterMenuActive)
-            {
-                string[] options = { "Create Master", "Choose Master", "Delete Master", "Exit" };
-                string choice = consoleHelper.pickType("Master Menu", options);
-
-                switch (choice)
-                {
-                    case "Create Master":
-                        createMasterFlow();
-                        masterMenuActive = false;
-                        break;
-                    case "Choose Master":
-                        chooseMasterFlow();
-                        masterMenuActive = false;
-                        break;
-                    case "Delete Master":
-                        deleteMasterFlow();
-                        masterMenuActive = false;
-                        break;
-                    case "Exit":
-                        masterMenuActive = false;
-                        animation.exitingLogo();
-                        return;
-                        
-                }
-            }
-        }
-
         private void createMasterFlow()
         {
             Console.Clear();
-            string masterName = consoleHelper.getName("Enter Master's Name: ");
-            string type = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
-            string trait = consoleHelper.pickType("Select Special Trait", attributes.specialTraits.ToArray());
 
+            // get master's name, exit if null
+            string masterName = consoleHelper.getName("Enter (0) to exit.\n=== Enter Master's Name: ");
+            if (masterName == null) return; // user pressed 0 or ESC
+
+            // select master type, exit if null
+            string type = consoleHelper.pickType("Select Master Type", attributes.ownerTypes.ToArray());
+            if (type == null) return; // user pressed 0 or ESC
+
+            // select special trait, exit if null
+            string trait = consoleHelper.pickType("Select Special Trait", attributes.specialTraits.ToArray());
+            if (trait == null) return; // user pressed 0 or ESC
+
+            // create new master
             Master newMaster = new Master(masterName)
             {
                 MasterType = type,
                 SpecialTrait = trait
             };
 
+            // insert into database
             long masterId = database.insertMaster(newMaster);
             newMaster.MasterID = masterId;
             master = newMaster;
 
+            // confirmation message
             consoleHelper.showMessage($"Master {masterName} created!");
         }
+
 
         private void chooseMasterFlow()
         {
@@ -157,17 +180,31 @@ namespace Lyserra.Game
                 names[i] = $"{list[i].MasterID}: {list[i].MasterName}";
 
             string picked = consoleHelper.pickType("Choose Master", names);
+            if (picked == null) return; 
             long masterID = long.Parse(picked.Split(':')[0]);
 
             Master chosenMaster = database.getMasterById(masterID);
-            this.master = chosenMaster;
+
+            if (consoleHelper.confirmation($"Are you sure to choose {chosenMaster.MasterName}?"))
+            {
+                
+                this.master = chosenMaster;
+                consoleHelper.showMessage($"Master {{chosenMaster.MasterName}} has entered the game!\nGet ready for adventure!");
+
+            }
+            else
+            {
+                consoleHelper.showMessage("Master selection cancelled. No worries, take your time!");
+            }
+
         }
 
         private void deleteMasterFlow()
         {
             Console.Clear();
-            string search = consoleHelper.getName("Search master to delete: ");
-            List<Master> list = database.searchMasters(search);
+
+            // Kunin lahat ng master
+            List<Master> list = database.getAllMasters();
 
             if (list.Count == 0)
             {
@@ -175,19 +212,34 @@ namespace Lyserra.Game
                 return;
             }
 
+            // Convert to string choices
             string[] names = new string[list.Count];
             for (int i = 0; i < list.Count; i++)
                 names[i] = $"{list[i].MasterID}: {list[i].MasterName}";
 
+            // Papa-pick mo like Choose Master
             string picked = consoleHelper.pickType("Delete Master", names);
+
             long masterId = long.Parse(picked.Split(':')[0]);
 
-            database.deletePetsByMasterId(masterId);
-            database.deleteMaster(masterId);
+            Master masterToDelete = list.First(m => m.MasterID == masterId);
 
-            consoleHelper.showMessage("Master and all their pets have been deleted.");
+            // Delete pets under that master
+           if(consoleHelper.confirmation($"Are you sure to delete {masterToDelete.MasterName}"))
+            {
+                database.deletePetsByMasterId(masterId);
+                database.deleteMaster(masterId);
+                consoleHelper.showMessage("Master and all their pets have been deleted.");      
+            }
+           else
+            {
+                consoleHelper.showMessage("Master deletion abort.");
+            }
 
-            if (master != null && master.MasterID == masterId)
+                
+
+            // Kung naka-select yung current master, i-clear mo rin
+            if (master != null && master.MasterID == masterId )
                 master = null;
         }
 
@@ -229,7 +281,20 @@ namespace Lyserra.Game
             pet.HairCut = consoleHelper.pickType("Select Pet Cut", attributes.hairCut.ToArray());
             pet.ColorDesign = consoleHelper.pickType("Select Pet Color Type", attributes.colorEType.ToArray());
             pet.EyeColor = consoleHelper.pickType("Select Eye Color", attributes.colorEye.ToArray());
-            pet.SpecialEye = consoleHelper.pickType("Does your pet have Speciel Eye?", attributes.specialEye.ToArray());
+
+            string SEAns = consoleHelper.pickType("Does your pet have Speciel Eye?", attributes.specialEye.ToArray());
+            bool specialEye = SEAns == "yes";
+            if (specialEye = true)
+            {
+                pet.SpecialEye = "Yes";
+            }
+            else
+            {
+                pet.SpecialEye = "No";
+            }
+
+
+
             pet.Accessory = consoleHelper.pickType("Select Accessory", attributes.accessory.ToArray());
             pet.Personality = consoleHelper.pickType("Select Personality", attributes.personality.ToArray());
             pet.Scent = consoleHelper.pickType("Select Scent", attributes.scent.ToArray());
@@ -261,11 +326,20 @@ namespace Lyserra.Game
             for (int i = 0; i < pets.Count; i++)
                 names[i] = $"{pets[i].PetID}: {pets[i].Name}";
 
-            string picked = consoleHelper.pickType("Delete Pet", names);
+            string picked = consoleHelper.pickType($"Delete Pet", names);
             long petId = long.Parse(picked.Split(':')[0]);
 
-            database.deletePet(petId);
-            consoleHelper.showMessage("Pet has been deleted.");
+            Pet petToDelete = pets.First(p => p.PetID == petId);
+
+            if (consoleHelper.confirmation($"Are you sure you want to delete {petToDelete.Name}?"))
+            {
+                database.deletePet(petId);
+                consoleHelper.showMessage($"{petToDelete.Name} has been deleted.");
+            }
+            else
+            {
+                consoleHelper.showMessage("Pet deletion abort.");
+            }   
         }
 
         private void choosePetFlow(long masterId)
@@ -294,28 +368,35 @@ namespace Lyserra.Game
                 chosenPet = database.getPetById(petId);
             }
 
-            assignPetToGlobal(chosenPet);
+            if(consoleHelper.confirmation($"Are you sure to choose {chosenPet.Name}?"))
+            {
+                assignPetToGlobal(chosenPet);
+                consoleHelper.showMessage($"{chosenPet.Name}!!!, I choose you.");
+                
+            } else
+            {
+                consoleHelper.showMessage("Choosing pet cancelled");
+            }
 
-            string info = $"{chosenPet.Name} ({chosenPet.Type})\n" +
-                          $"Breed: {chosenPet.Breed}\n" +
-                          $"Age: {chosenPet.Age}\n" +
-                          $"Weight: {chosenPet.Weight}\n" +
-                          $"Hair: {chosenPet.HairColor} {chosenPet.HairCut}\n" +
-                          $"Eye Color: {chosenPet.EyeColor}\n" +
-                          $"Special Eye: {chosenPet.SpecialEye}\n" +
-                          $"Accessory: {chosenPet.Accessory}\n" +
-                          $"Personality: {chosenPet.Personality}\n" +
-                          $"Scent: {chosenPet.Scent}\n" +
-                          $"Mutatation: [{chosenPet.Mutation}]\n"+
-                          $"Mutation: {chosenPet.Mutation}\n" +
-                          $"Element: {chosenPet.Element}\n" +
-                          $"Crystal: {chosenPet.Crystal}\n" +
-                          $"Evolution: {chosenPet.Evolution}\n" +
-                          $"================= Stats  ===============\n" +
-                          $"STR: {chosenPet.Strength}\n" +
-                          $"MANA: {chosenPet.Mana}\n" +
-                          $"DEF: {chosenPet.Defense}\n" +
-                          $"SPD: {chosenPet.Speed}";
+                string info = $"{chosenPet.Name} ({chosenPet.Type})\n" +
+                              $"Breed: {chosenPet.Breed}\n" +
+                              $"Age: {chosenPet.Age}\n" +
+                              $"Weight: {chosenPet.Weight}\n" +
+                              $"Hair: {chosenPet.HairColor} {chosenPet.HairCut}\n" +
+                              $"Eye Color: {chosenPet.EyeColor}\n" +
+                              $"Special Eye: {chosenPet.SpecialEye}\n" +
+                              $"Accessory: {chosenPet.Accessory}\n" +
+                              $"Personality: {chosenPet.Personality}\n" +
+                              $"Scent: {chosenPet.Scent}\n" +
+                              $"Mutation: {chosenPet.Mutation}\n" +
+                              $"Element: {chosenPet.Element}\n" +
+                              $"Crystal: {chosenPet.Crystal}\n" +
+                              $"Evolution: {chosenPet.Evolution}\n" +
+                              $"================= Stats  ===============\n" +
+                              $"STR: {chosenPet.Strength}\n" +
+                              $"MANA: {chosenPet.Mana}\n" +
+                              $"DEF: {chosenPet.Defense}\n" +
+                              $"SPD: {chosenPet.Speed}";
 
             consoleHelper.showMessage(info);
         }
@@ -327,10 +408,13 @@ namespace Lyserra.Game
             Console.WriteLine(line);
             Console.WriteLine("CREDITS".PadLeft((40 + "CREDITS".Length) / 2));
             Console.WriteLine(line);
-            Console.WriteLine("Programmers/Directors:".PadLeft((40 + 23) / 2));
+            Console.WriteLine("Programmers/Documentators:".PadLeft((40 + 23) / 2));
             Console.WriteLine("Fritz Gabriel M. Almene".PadLeft((40 + 24) / 2));
             Console.WriteLine("Jhon Clifford Robion".PadLeft((40 + 21) / 2));
             Console.WriteLine(line);
+            Console.WriteLine("Presented to: Lorenz Christopher Afan".PadLeft((40 + 21) / 2));
+            Console.WriteLine(line);
+
             Console.WriteLine("Press Enter to return...".PadLeft((40 + 23) / 2));
             Console.ReadLine();
         }
